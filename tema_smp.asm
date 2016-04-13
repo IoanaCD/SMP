@@ -1,261 +1,246 @@
-
 include 'emu8086.inc'
+org 100h
+jmp Start
+Data:
+    x1 dw 100 ;valoarea de inceput a laturii din spate pe axa x
+    x2 dw 150 ;valoarea de sfarsit a laturii din spate pe axa x
+    x3 dw 125 ;valoarea de inceput a laturii din fata pe axa x
+    x4 dw 175 ;valoarea de sfarsit a laturii din fata pe axa x
+    y1 dw 100 ;valoarea de inceput a laturii din spate pe axa y
+    y2 dw 150 ;valoarea de sfarsit a laturii din spate pe axa y
+    y3 dw 125 ;valoarea de inceput a laturii din fata pe axa y
+    y4 dw 175 ;valoarea de sfarsit a laturii din fata pe axa y
+    l dw 50 ;dimensiunea unei laturi a casei
+    xw1 dw 103 ;punctul pe axa x de incepere a desenarii ferestrei
+    yw1 dw 115 ;punctul pe axa y de incepere a desenarii ferestrei
+    xw2 dw ? ;punctul pe x ales in functie de dimensiunea ferestrei
+    yw2 dw ? ;punctul pe y ales in functie de dimensiunea ferestrei
+    xd1 dw 130 ;punctul pe axa x de incepere a desenarii usii
+    yd1 dw 175 ;punctul pe axa y de incepere a desenarii usii
+    lw dw ? ;dimensiunea laturii ferestrei
+    hd dw ? ;inaltimea usii
+    ld dw ? ;latimea usii
+Start:
+    ;set video mode to 320xw200
+    mov ah,0 
+    mov al,13h
+    int 10h
+    ;incep desenarea laturii din spate
+    mov cx,x1 ;pun in cx valoarea de inceput de pe x   
+    mov dx,y1 ;pun in dx valoarea de inceput de pe y
+    add dx,l ;adaug dimensiunea unei laturi
+Loop1:
+    call draw ;apelez functia draw pentru a desena primul pixel
+    dec dx ;decrementez valoarea de pe axa y
+    cmp dx,y1 ;verific daca am ajuns la sfarsitul liniei
+    ;daca nu continui bucla pana ajung la finalul liniei ce trebuie desenata
+    jae Loop1
 
-org     100h
-
-; jump over data section:
-jmp     start
-
-; ------ data section ------
-
-s_size  equ     7
-
-; the snake coordinates
-; (from head to tail)
-; low byte is left, high byte
-; is top - [top, left]
-snake dw s_size dup(0)
-
-tail    dw      ?
-
-; direction constants
-;          (bios key codes):
-left    equ     4bh
-right   equ     4dh
-up      equ     48h
-down    equ     50h
-foodx equ 12h
-foody equ 15h
-
-; current snake direction:
-cur_dir db      right
-
-wait_time dw    0
-
-; welcome message
-msg 	db "==== how to play ====", 0dh,0ah
-	db "this game was debugged on emu8086", 0dh,0ah
-	db "but it is not designed to run on the emulator", 0dh,0ah
-	db "because it requires relatively fast video card and cpu.", 0dh,0ah, 0ah
-	
-	db "if you want to see how this game really works,", 0dh,0ah
-	db "run it on a real computer (click external->run from the menu).", 0dh,0ah, 0ah
-	
-	db "you can control the snake using arrow keys", 0dh,0ah	
-	db "all other keys will stop the snake.", 0dh,0ah, 0ah
-	
-	db "press esc to exit.", 0dh,0ah
-	db "====================", 0dh,0ah, 0ah
-	db "press any key to start...$"
-msg2 	db "   ", 0dh,0ah
-	
-	
-
-; ------ code section ------
-
-start:
-
-; print welcome message:
-mov dx,offset msg
-mov ah,9 
-int 21h
+    mov cx,x3
+    add cx,l
+    mov dx,y3                
+Loop5:
+    call draw
+    dec cx
+    cmp cx, x3
+    jae Loop5
 
 
-; wait for any key:
-mov ah, 00h
-int 16h
+    mov dx,y3
+    add dx,l
+Loop6:
+    call draw
+    dec dx
+    cmp dx,y3
+    jae Loop6
+    
+    mov cx,x3
+    add cx,l                
+Loop7:
+    mov dx,y4
+    call draw
+    dec cx
+    cmp cx,x3
+    jae Loop7
+    
+    mov dx,y3
+    inc dx
+    mov cx, x4
+Loop8:    
+    call draw
+    dec dx
+    cmp dx,y3
+    jae Loop8
+    
+    mov cx,x1
+    add cx,25 
+    mov dx,y1
+    add dx,25    
+Loop9:
+    call draw
+    dec cx
+    dec dx
+    cmp cx,x1
+    jae Loop9 
+    
+    mov cx,x1
+    add cx,24
+    mov dx,y2
+    add dx,24
+Loop10:
+    call draw
+    dec cx
+    dec dx
+    cmp dx,y2
+    jae Loop10 
 
+    mov cx,x3
+    mov dx,y3
+Loop12:
+    call draw
+    inc cx
+    sub dx,2
+    cmp dx, 75
+    jae Loop12 
+    
+    mov cx,x4
+    mov dx,y3  
+Loop13:
+    call draw
+    dec cx
+    sub dx,2
+    cmp dx, 75
+    jae Loop13
+    
+    mov cx,x1
+    mov dx,y1
+Loop15:
+    call draw
+    inc cx
+    sub dx,2
+    cmp dx, 50
+    jae Loop15
+    
+    mov cx,x3
+    mov dx,y3
+    sbb dx,75
+Loop16:
+    call draw
+    inc cx
+    add dx,1
+    cmp cx, x2
+    jbe Loop16 
+;cand termin de desenat apelez functia pentru generarea de sunet       
+call sound 
+;mut cursorul la inceputul paginii
+GOTOXY 0,0
+PRINTN 'Dati dimensiunea ferestrei(max 20): ' 
+;apelez functia pentru citirea valorii dimensiunii ferestrei
+CALL scan_num
+mov lw,cx ;pun valoarea citita in variabila destinata memorarii acesteia
+;pregatesc registrii pentru inceperea desenarii ferestrei    
+mov cx,xw1
+mov dx,yw1
+add dx,lw
 
+Loop17:
+    call draw
+    sub dx,1
+    cmp dx,yw1
+    jae Loop17 
 
+mov cx,xw1
+add cx,lw
+mov dx,yw1
+add dx,lw
+Loop18:
+    call draw
+    dec cx
+    sub dx,1
+    cmp dx,yw1
+    jae Loop18 
+    
+    mov cx,xw1
+    add cx,lw
+    mov bx,yw1
+    add bx,lw
+    mov yw2,bx
+    mov dx,yw2
+    add dx,lw 
+Loop19:
+    call draw
+    dec cx
+    sub dx,1
+    cmp cx, xw1
+    jae Loop19
+    
+    
+    mov bx,xw1
+    add bx,lw
+    mov xw2,bx
+    mov cx,xw1
+    add cx,lw
+    mov bx,yw1
+    add bx,lw
+    mov yw2,bx
+    mov dx,yw2
+    add dx,lw
+Loop20:
+    call draw
+    sub dx,1
+    cmp dx, yw2
+    jae Loop20
+call sound
+GOTOXY 0,0
+PRINTN 'Dati inaltimea usii(max 30):       '
+CALL scan_num
+mov hd,cx 
 
+GOTOXY 0,0
+PRINTN 'Dati latimea usii(max 30):         '
+CALL scan_num
+mov ld,cx 
 
+mov cx, xd1
+mov dx, yd1
+sub dx,hd
+Loop21:
+    call draw
+    inc dx
+    cmp dx, yd1
+    jbe Loop21 
 
-; hide text cursor:
-mov     ah, 1
-mov     ch, 2bh
-mov     cl, 0bh
-int     10h 
+mov cx,xd1
+add cx,ld
+mov dx,yd1
+sub dx,hd 
+Loop23:
+    call draw
+    inc dx
+    cmp dx, yd1
+    jbe Loop23  
+    
+mov cx,xd1
+add cx,ld
+mov dx,yd1
+sub dx,hd
+Loop22:
+    call draw
+    dec cx
+    cmp cx, xd1
+    jae Loop22
 
-call CLEAR_SCREEN        
+draw PROC ;desenarea unui pixel
+    mov al, 50    
+    mov ah, 0ch
+    int 10h
+draw ENDP
 
-        
-print_food: 
-GOTOXY foodx,foody
-putc '*'
-
-game_loop:
-
-; === select first video page
-mov     al, 0  ; page number.
-mov     ah, 05h
-int     10h
-
-; === show new head:
-mov     dx, snake[0]
-
-; set cursor at dl,dh
-mov     ah, 02h
-int     10h
-
-; print '*' at the location:
-mov     al, '*'
-mov     ah, 09h
-mov     bl, 0eh ; attribute.
-mov     cx, 1   ; single char.
-int     10h
-
-; === keep the tail:
-mov     ax, snake[s_size * 2 - 2]
-mov     tail, ax
-
-call    move_snake
-
-
-; === hide old tail:
-mov     dx, tail
-
-; set cursor at dl,dh
-mov     ah, 02h
-int     10h
-
-; print ' ' at the location:
-mov     al, ' '
-mov     ah, 09h
-mov     bl, 0eh ; attribute.
-mov     cx, 1   ; single char.
-int     10h
-
-
-
-check_for_key:
-
-; === check for player commands:
-mov     ah, 01h
-int     16h
-jz      no_key
-
-mov     ah, 00h
-int     16h
-
-cmp     al, 1bh    ; esc - key?
-je      stop_game  ;
-
-mov     cur_dir, ah 
-
-
-
-no_key:
-
-
-
-; === wait a few moments here:
-; get number of clock ticks
-; (about 18 per second)
-; since midnight into cx:dx
-mov     ah, 00h
-int     1ah
-cmp     dx, wait_time
-jb      check_for_key
-add     dx, 4
-mov     wait_time, dx
-
-
-
-; === eternal game loop:
-jmp     game_loop
-
-
-stop_game:
-
-; show cursor back:
-mov     ah, 1
-mov     ch, 0bh
-mov     cl, 0bh
-int     10h
-
+sound proc ;generarea de sunet
+    mov ah, 02
+    mov dl, 07h
+    int 21h
+sound ENDP
+    
+DEFINE_SCAN_NUM
 ret
-
-; ------ functions section ------
-
-; this procedure creates the
-; animation by moving all snake
-; body parts one step to tail,
-; the old tail goes away:
-; [last part (tail)]-> goes away
-; [part i] -> [part i+1]
-; ....
-
-move_snake proc near
-
-; set es to bios info segment:  
-mov     ax, 40h
-mov     es, ax
-
-  ; point di to tail
-  mov   di, s_size * 2 - 2
-  ; move all body parts
-  ; (last one simply goes away)
-  mov   cx, s_size-1
-move_array:
-  mov   ax, snake[di-2]
-  mov   snake[di], ax
-  sub   di, 2
-  loop  move_array
-
-
-cmp     cur_dir, left
-  je    move_left
-cmp     cur_dir, right
-  je    move_right
-cmp     cur_dir, up
-  je    move_up
-cmp     cur_dir, down
-  je    move_down
-
-jmp     stop_move       ; no direction.
-
-
-move_left:
-  mov   al, b.snake[0]
-  dec   al
-  mov   b.snake[0], al
-  cmp   al, -1
-  jne   stop_move       
-  mov   al, es:[4ah]    ; col number.
-  dec   al
-  mov   b.snake[0], al  ; return to right.
-  jmp   stop_move
-
-move_right:
-  mov   al, b.snake[0]
-  inc   al
-  mov   b.snake[0], al
-  cmp   al, es:[4ah]    ; col number.   
-  jb    stop_move
-  mov   b.snake[0], 0   ; return to left.
-  jmp   stop_move
-
-move_up:
-  mov   al, b.snake[1]
-  dec   al
-  mov   b.snake[1], al
-  cmp   al, -1
-  jne   stop_move
-  mov   al, es:[84h]    ; row number -1.
-  mov   b.snake[1], al  ; return to bottom.
-  jmp   stop_move
-
-move_down:
-  mov   al, b.snake[1]
-  inc   al
-  mov   b.snake[1], al
-  cmp   al, es:[84h]    ; row number -1.
-  jbe   stop_move
-  mov   b.snake[1], 0   ; return to top.
-  jmp   stop_move
-
-stop_move:
-  ret
-DEFINE_CLEAR_SCREEN
-end
-;move_snake endp
