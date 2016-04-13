@@ -19,7 +19,11 @@ Data:
     yd1 dw 175 ;punctul pe axa y de incepere a desenarii usii
     lw dw ? ;dimensiunea laturii ferestrei
     hd dw ? ;inaltimea usii
-    ld dw ? ;inaltimea
+    ld dw ? ;inaltimea  
+    xs dw ?
+ys dw ?
+nr dw ?
+
 Start:
 
     ;set vid mode to 320xw200 @ 256 colo
@@ -238,6 +242,83 @@ Loop18:
     dec cx   
     cmp cx,xd1
     jae Loop18
+PRINTN 'Alegeti punctul de pornire pentru stelute'
+draw_star:
+mov ax, 0 ; ini?ializare mouse
+int 33h
+cmp ax, 0
+;mov ax, 1 ; afi?are cursor mouse – op?ional
+;int 33h
+check_mouse_button:
+mov ax, 3
+int 33h ; preluare pozi?ie ?i status butoane
+shr cx, 1 ; x/2 – în modul grafic este dublata coordonata x
+cmp bx, 1
+jne check_mouse_button
+mov xs,cx
+mov ys,dx
+add cx,4
+sub dx,4
+draw_s:
+    call draw
+    dec cx
+    inc dx
+    cmp cx,xs
+    jne draw_s
+     
+    mov cx,xs
+    mov dx,ys
+    sub cx,4
+    add dx,4
+draw_s1:
+    call draw
+    inc cx
+    dec dx
+    cmp cx,xs
+    jne draw_s1
+    mov cx,xs
+    mov dx,ys
+    sub dx,4
+    sub cx,4
+draw_s2:
+    call draw
+    inc dx
+    inc cx
+    cmp dx,ys
+    jne draw_s2
+    mov cx,xs
+    mov dx,ys
+    add dx,4 
+    add cx,4
+draw_s3:
+    call draw
+    dec dx
+    dec cx
+    cmp dx,ys
+    jne draw_s3
+    add dx,4
+draw_s4:
+    call draw
+    dec dx
+    cmp dx,ys
+    jne draw_s4
+    sub dx,4
+draw_s5:
+    call draw
+    inc dx
+    cmp dx,ys
+    jne draw_s5
+    
+check_esc_key:
+mov dl, 255
+mov ah, 6
+int 21h
+cmp al, 27 ; esc?
+;jne check_mouse_button
+jne draw_star    
+    
+    
+
     
 hlt
 draw PROC
