@@ -26,487 +26,118 @@ Start:
     mov ah, 0
     mov al, 13h
     int 10h
-
-    
-
-
-    ;start the line using the cx register
-
-    ;add l to the line
-
-    mov cx, x1
-
-   ; add cx, l                
-
-    ;create a loop to draw the line 
-
+    mov cx,x1
+    mov dx,y1
+    add dx,l
 Loop1:
-   ; mov dx, y1
-
-    ;crate a function to draw a pixel, then call the interupt
-
-    ;call draw
-
-    ;decrease the X value till the origin is met
-
-    ;dec cx
-
-
-    ;cmp value in cx to see if origin is met, restart loop if not
-
-    ;cmp cx, x1
-
-    ;jae Loop1
-
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
- ;next set the dx (y coord) to ystart and add l
-
-    ;this has to be done after the first loopstart
-
-    mov dx, y1
-
-    add dx, l
-
-    ;loop from (ystart+l) to ystart and add l
+    call draw
+    dec dx
+    cmp dx,y1
+    jae Loop1
+    
+    mov cx,x1
+    mov dx,y2
+    mov cx,x3
+    add cx,l                
 
 Loop2:
-
-    ;draw a pixel
-
-   call draw
-
-    ;decrement the y coord
-
-    dec dx
-
-    ;test to see if y coord has reached start value
-
-    cmp dx, y1
-
-    ;continue loop if dx >= ystart
-
+    mov dx,y3
+    call draw
+    dec cx
+    cmp cx,x3
     jae Loop2
-
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-     ;start the line using the cx register
-
-    ;add l to the line
-
-    mov cx, x1
-
-    ;add cx, 24                
-
-     
-
-    ;create a loop to draw the line
-
-;Loop3:
-
- 
-
-    ;create the first point on the line and set the color
-
-    ;mov al, 50
-    ;
-    ;mov dx, y2
-
-     
-
-    ;crate a function to draw a pixel, then call the interupt
-
-    ;mov ah, 0ch
-
-    ;int 10h
-
-     
-
-    ;decrease the X value till the origin is met
-
-    ;dec cx
-
-     
-
-    ;cmp value in cx to see if origin is met, restart loop if not
-
-    ;cmp cx, x1
-
-    ;jae Loop3
-
-     
-
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
- 
-
-    ;next set the dx (y coord) to ystart and add l
-
-    ;this has to be done after the first loopstart
-
-    mov dx, y2
-
-   ; add dx, l
-
-     
-
-    ;loop from (ystart+l) to ystart and add l
-
-;Loop4:
-
- 
-
-    ;draw a pixel
-
-    ;set color in al, x in cx, y in dx
-
-   ; mov al, 50
-
-   ; mov cx, x2
-
-    ;int 10h  
     
-   ; mov ah, 0ch
-
-   ; int 10h  
-     ;decrease the X value till the origin is met
-
-    ;dec dx
-
-     
-
-    ;cmp value in cx to see if origin is met, restart loop if not
-
-    ;cmp dx, y2
-
-    ;jae Loop4
-
-    ;start the line using the cx register
-
-    ;add l to the line
-
-    mov cx, x3
-
-    add cx, l                
-
-     
-
-     
-
-    ;create a loop to draw the line
-
-Loop5:
-
- 
-
-  
-
-
-   mov dx, y3
-
+    mov dx,y3
+    add dx,l
+Loop3:
     call draw
+    dec dx
+    cmp dx,y3
+    jae Loop3
      
-
-    ;decrease the X value till the origin is met
-
+    mov cx,x3
+    add cx,l                
+Loop4:
+    mov dx,y4
+    call draw
     dec cx
-
-     
-
-    ;cmp value in cx to see if origin is met, restart loop if not
-
-    cmp cx, x3
-
+    cmp cx,x3
+    jae Loop4
+    
+    mov dx,y3
+    add dx,l
+Loop5:
+    mov cx,x4
+    call draw
+    dec dx
+    cmp dx,y3
     jae Loop5
-
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
- 
-
- 
-
- ;next set the dx (y coord) to ystart and add l
-
-    ;this has to be done after the first loopstart
-
-    mov dx, y3
-
-    add dx, l
-
-     
-
-     
-
-    ;loop from (ystart+l) to ystart and add l
-
-Loop6:
-
- 
-
-    ;draw a pixel
-
-    ;set color in al, x in cx, y in dx
-
-    call draw
-
-     
-
-    ;decrement the y coord
-
-    sub dx, 1
-
-     
-
-    ;test to see if y coord has reached start value
-
-    cmp dx, y3
-
-     
-
-    ;continue loop if dx >= ystart
-
-    jae Loop6
-
-     
-
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-     
-
-     ;start the line using the cx register
-
-    ;add l to the line
-
-    mov cx, x3
-
-    add cx, l                
-
-     
-
-     
-
-    ;create a loop to draw the line
-
-Loop7:
-
- 
-
-  
-
-    mov dx, y4
-
-   call draw
-
-    ;decrease the X value till the origin is met
-
-    sub cx, 1
-
-     
-
-    ;cmp value in cx to see if origin is met, restart loop if not
-
-    cmp cx, x3
-
-    jae Loop7
-
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-;next set the dx (y coord) to ystart and add l
-
-    ;this has to be done after the first loopstart
-
-    mov dx, y3
-
-    add dx, l
-
-     
-
-    ;loop from (ystart+l) to ystart and add l
-
-Loop8:
-    ;draw a pixel
-
-    ;set color in al, x in cx, y in dx
-
- 
-
-    mov cx, x4
-    call draw
-
-    ;decrement the y coord
-
-    sub dx, 1
-
-    ;test to see if y coord has reached start value
-
-    cmp dx, y3
-
-    ;continue loop if dx >= ystart
-
-    jae Loop8
     
-    
-    mov cx, x1
-    add cx, 25 
+    mov cx,x1
+    add cx,25 
     mov dx,y1
-    add dx,25
-    
-Loop9:
+    add dx,25  
+Loop6:
     call draw
-
-    ;decrement the y coord
-
     dec cx
     dec dx
-
-    ;test to see if y coord has reached start value
-
-    cmp cx, x1
-
-    ;continue loop if dx >= ystart
-
-    jae Loop9 
+    cmp cx,x1
+    jae Loop6 
     
      mov cx,x1
      add cx,24
      mov dx,y2
      add dx,24
-Loop10:
+Loop7:
     call draw
-    ;decrement the y coord
-
     dec cx
     dec dx
+    cmp dx,y2
+    jae Loop7 
 
-    ;test to see if y coord has reached start value
-
-    cmp dx, y2
-
-    ;continue loop if dx >= ystart
-
-    jae Loop10 
-     ;mov cx,x2
-     ;add cx,25
-    ; mov dx,y1
-     ;add dx,25
-Loop11:
-    ;call draw
-
-    ;decrement the y coord
-
-    ;dec cx
-    ;dec dx
-
-    ;test to see if y coord has reached start value
-
-    ;cmp cx, x2
-
-    ;continue loop if dx >= ystart
-
-    ;jae Loop11
-     mov cx,x3
-     ;a cx,25
-     mov dx,y3
-     ;add dx,25
-Loop12:
+    mov cx,x3
+    mov dx,y3
+    
+Loop8:
     call draw
-
-    ;decrement the y coord
-
     inc cx
     sub dx,2
-
-    ;test to see if y coord has reached start value
-
-    cmp dx, 75
-
-    ;continue loop if dx >= ystart
-
-    jae Loop12
+    cmp dx,75
+    jae Loop8
     mov cx,x4
-     ;sub cx,25
-     mov dx,y3
-     ;add dx,l
+    mov dx,y3
      
-Loop13:
+Loop9:
     call draw
-
-    ;decrement the y coord
-
     dec cx
     sub dx,2
+    cmp dx,75
+    jae Loop9
+   
 
-    ;test to see if y coord has reached start value
-
-    cmp dx, 75
-
-    ;continue loop if dx >= ystart
-
-    jae Loop13
-   ; mov cx,x2
-     ;sub cx,25
-    ;mov dx,y1
-     ;add dx,l
-     
-Loop14:
-   ; call draw
-
-    ;decrement the y coord
-
-    ;dec cx
-   ; sub dx,2
-    ;
-    ;test to see if y coord has reached start value
-
-    ;cmp dx, 50
-
-    ;continue loop if dx >= ystart
-
-    ;jae Loop14 
-    
     mov cx,x1
-     ;add cx,27
-     mov dx,y1
-     ;add dx,25
-Loop15:
+    mov dx,y1
+Loop10:
     call draw
-    ;
-    ;decrement the y coord
-
     inc cx
     sub dx,2
-
-    ;test to see if y coord has reached start value
-
-  cmp dx, 50
-
-    ;continue loop if dx >= ystart
-
-    jae Loop15
+    cmp dx,50
+    jae Loop10
+    
     mov cx,x3
-     ;add cx,27
-     mov dx,y3
-     sbb dx,75
-Loop16:
+    mov dx,y3
+    sbb dx,75
+Loop11:
     call draw
-
-    ;decrement the y coord
-
     inc cx
     add dx,1
-
-    ;test to see if y coord has reached start value
-
-    cmp cx, x2
-
-    ;continue loop if dx >= ystart
-
-    jbe Loop16    
-    
-   mov ah, 02
-mov dl, 07h       ;07h is the value to produce the beep tone
-int 21h                ;produce the sound
-;int 20h 
+    cmp cx,x2
+    jbe Loop11
+        
+    mov ah, 02
+    mov dl, 07h       ;07h is the value to produce the beep tone
+    int 21h                ;produce the sound
+ 
 GOTOXY 0,0
 PRINTN 'Dati dimensiunea ferestrei(max 20): ' 
     CALL scan_num
@@ -515,42 +146,23 @@ PRINTN 'Dati dimensiunea ferestrei(max 20): '
     mov cx,xw1
     mov dx,yw1
     add dx,lw
-Loop17:
+Loop12:
     call draw
-
-    ;decrement the y coord
-
-    ;dec cx
     sub dx,1
-
-    ;test to see if y coord has reached start value
-
-    cmp dx, yw1
-
-    ;continue loop if dx >= ystart
-
-    jae Loop17 
-    
+    cmp dx,yw1
+    jae Loop12 
     
     mov cx,xw1
     add cx,lw
     mov dx,yw1
     add dx,lw
-Loop18:
+    
+Loop13:
     call draw
-
-    ;decrement the y coord
-
     dec cx
-    sub dx,1
-
-    ;test to see if y coord has reached start value
-
-    cmp dx, yw1
-
-    ;continue loop if dx >= ystart
-
-    jae Loop18 
+    dec dx
+    cmp dx,yw1
+    jae Loop13 
     
     mov cx,xw1
     add cx,lw
@@ -560,136 +172,81 @@ Loop18:
     mov dx,yw2
     add dx,lw
     
-Loop19:
+Loop14:
     call draw
-
-    ;decrement the y coord
-
     dec cx
     sub dx,1
+    cmp cx,xw1
+    jae Loop14
 
-    ;test to see if y coord has reached start value
-
-    cmp cx, xw1
-
-    ;continue loop if dx >= ystart
-
-    jae Loop19
-    
-    
-    mov bx,xw1
-    add bx,lw
-    mov xw2,bx
-    mov cx,xw1
-    add cx,lw
-    mov bx,yw1
-    add bx,lw
-    mov yw2,bx
-    mov dx,yw2
-    add dx,lw
-Loop20:
+mov bx,xw1
+add bx,lw
+mov xw2,bx
+mov cx,xw1
+add cx,lw
+mov bx,yw1
+add bx,lw
+mov yw2,bx
+mov dx,yw2
+add dx,lw
+Loop15:
     call draw
-
-    ;decrement the y coord
-
-    ;dec cx
-    sub dx,1
-
-    ;test to see if y coord has reached start value
-
-    cmp dx, yw2
-
-    ;continue loop if dx >= ystart
-
-    jae Loop20
-mov ah, 02
-mov dl, 07h       ;07h is the value to produce the beep tone
+    dec dx
+    cmp dx,yw2
+    jae Loop15
+    
+mov ah,02
+mov dl,07h       ;07h is the value to produce the beep tone
 int 21h
 GOTOXY 0,0
 PRINTN 'Dati inaltimea usii(max 30):       '
 CALL scan_num
 mov hd,cx
+
 GOTOXY 0,0
 PRINTN 'Dati latimea usii(max 30):         '
 CALL scan_num
-mov ld,cx 
-    mov cx, xd1
-    mov dx, yd1
+mov ld,cx
+PRINTN '                                   ' 
+
+    mov cx,xd1
+    mov dx,yd1
     sub dx,hd
-Loop21:
+Loop16:
     call draw
-
-    ;decrement the y coord
-
-    ;dec cx
     inc dx
-
-    ;test to see if y coord has reached start value
-
-    cmp dx, yd1
-
-    ;continue loop if dx >= ystart
-
-    jbe Loop21 
-    
-
-    
+    cmp dx,yd1
+    jbe Loop16 
+   
     mov cx,xd1
     add cx,ld
     mov dx,yd1
     sub dx,hd 
-    ;inc dx
-Loop23:
+ 
+Loop17:
     call draw
-
-    ;decrement the y coord
-
     inc dx
-    
-
-    ;test to see if y coord has reached start value
-
-    cmp dx, yd1
-
-    ;continue loop if dx >= ystart
-
-    jbe Loop23  
+    cmp dx,yd1
+    jbe Loop17  
     
     mov cx,xd1
     add cx,ld
     mov dx,yd1
     sub dx,hd
-Loop22:
+Loop18:
     call draw
-
-    ;decrement the y coord
-
-    dec cx
+    dec cx   
+    cmp cx,xd1
+    jae Loop18
     
-
-    ;test to see if y coord has reached start value
-
-    cmp cx, xd1
-
-    ;continue loop if dx >= ystart
-
-    jae Loop22
-    
-
+hlt
 draw PROC
     ;create the first point on the line and set the color
-    mov al, 50    
+    mov al,50    
     ;crate a function to draw a pixel, then call the interupt
-    mov ah, 0ch
+    mov ah,0ch
     int 10h
     ;ret
 draw ENDP
 DEFINE_SCAN_NUM
 ret
-
-
-
-
-
-
-
