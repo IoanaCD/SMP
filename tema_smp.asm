@@ -25,49 +25,49 @@ ys dw ?
 nr dw ?
 
 Start:
-
-    ;set vid mode to 320xw200 @ 256 colo
+    ;set video mode to 320xw200 @ 256 colo
     mov ah, 0
     mov al, 13h
-    int 10h
-    mov cx,x1
+    int 10h   
+    ;aduc in cx si dx coordonatele de plecare pentru desenarea primei linii
+    mov cx,x1 
     mov dx,y1
-    add dx,l
+    add dx,l; adaug si lungimea laturii
+    
 Loop1:
-    call draw
-    dec dx
-    cmp dx,y1
-    jae Loop1
-    
-    mov cx,x1
-    mov dx,y2
+    call draw  ;apelez functia de desenare
+    dec dx     ;decrementez dx
+    cmp dx,y1  ;si verific daca am terminat de desenat linia
+    jae Loop1  ;daca nu continui bucla
+    ;trec la desenarea urmatoarei linii si pun coordonatele punctului de plecare in cx si dx
+    ;mov cx,x1
+    ;mov dx,y2
     mov cx,x3
-    add cx,l                
-
-Loop2:
+    add cx,l;adaug si dimensiunea laturii                
     mov dx,y3
-    call draw
+Loop2:
+    call draw;apelez functia de desenare a unui pixel
     dec cx
-    cmp cx,x3
-    jae Loop2
-    
+    cmp cx,x3 ;si verific daca am terminat de desenat
+    jae Loop2 ;daca nu, continui 
+    ;trec la desenarea urmatoarei linii si pun coordonata punctului de plecare in dx
     mov dx,y3
     add dx,l
 Loop3:
-    call draw
+    call draw ;apelez functia de desenare a unui pixel
     dec dx
-    cmp dx,y3
-    jae Loop3
-     
+    cmp dx,y3 ;si verific daca am terminat de desenat
+    jae Loop3 ;daca nu, continui
+    ;trec la desenarea urmatoarei linii si pun coordonatele punctului de plecare in cx si dx 
     mov cx,x3
-    add cx,l                
+    add cx,l
+    mov dx,y4                
 Loop4:
-    mov dx,y4
-    call draw
+    call draw ; apelez functia de desenare a unui pixel
     dec cx
-    cmp cx,x3
-    jae Loop4
-    
+    cmp cx,x3  ;verific daca am terminat de desenat
+    jae Loop4  ;daca nu,continui
+    ;voi face aceeasi pasi dar pentru coordonate de pornire diferite pana voi termina de desenat casuta
     mov dx,y3
     add dx,l
 Loop5:
@@ -88,10 +88,10 @@ Loop6:
     cmp cx,x1
     jae Loop6 
     
-     mov cx,x1
-     add cx,24
-     mov dx,y2
-     add dx,24
+    mov cx,x1
+    add cx,24
+    mov dx,y2
+    add dx,24
 Loop7:
     call draw
     dec cx
@@ -101,16 +101,15 @@ Loop7:
 
     mov cx,x3
     mov dx,y3
-    
 Loop8:
     call draw
     inc cx
     sub dx,2
     cmp dx,75
     jae Loop8
+    
     mov cx,x4
-    mov dx,y3
-     
+    mov dx,y3 
 Loop9:
     call draw
     dec cx
@@ -138,29 +137,27 @@ Loop11:
     cmp cx,x2
     jbe Loop11
         
-    mov ah, 02
-    mov dl, 07h       ;07h is the value to produce the beep tone
-    int 21h                ;produce the sound
- 
+call sound ;cand termin de desenat casa voi apela functia ce genereaza un sunet
+;mut cursorul in pozitia cea mai de sus 
 GOTOXY 0,0
+;si cer dimensiunile ferestrei
 PRINTN 'Dati dimensiunea ferestrei(max 20): ' 
-    CALL scan_num
-    mov lw,cx
-    
+    CALL scan_num ;apelez functia pentru citirea unei valori
+    mov lw,cx ;valoarea laturii o pun in variabila lw
+    ;pozitionez coordonatele 
     mov cx,xw1
     mov dx,yw1
-    add dx,lw
+    add dx,lw ;adaug lungimea unei laturi a ferestrei
 Loop12:
-    call draw
+    call draw ;si incep sa desenez
     sub dx,1
-    cmp dx,yw1
+    cmp dx,yw1 ; pana cand termin de desenat latura
     jae Loop12 
-    
+    ;voi face acelasi lucru pana cand termin de desenat fereastra
     mov cx,xw1
     add cx,lw
     mov dx,yw1
-    add dx,lw
-    
+    add dx,lw 
 Loop13:
     call draw
     dec cx
@@ -175,7 +172,6 @@ Loop13:
     mov yw2,bx
     mov dx,yw2
     add dx,lw
-    
 Loop14:
     call draw
     dec cx
@@ -183,50 +179,49 @@ Loop14:
     cmp cx,xw1
     jae Loop14
 
-mov bx,xw1
-add bx,lw
-mov xw2,bx
-mov cx,xw1
-add cx,lw
-mov bx,yw1
-add bx,lw
-mov yw2,bx
-mov dx,yw2
-add dx,lw
+    mov bx,xw1
+    add bx,lw
+    mov xw2,bx
+    mov cx,xw1
+    add cx,lw
+    mov bx,yw1
+    add bx,lw
+    mov yw2,bx
+    mov dx,yw2
+    add dx,lw
 Loop15:
     call draw
     dec dx
     cmp dx,yw2
-    jae Loop15
-    
-mov ah,02
-mov dl,07h       ;07h is the value to produce the beep tone
-int 21h
+    jae Loop15 
+call sound ;termin de desenat fereastra si apelez functia de generare de sunet
+;cer valorile inaltimiii si latimii pentru usa
 GOTOXY 0,0
 PRINTN 'Dati inaltimea usii(max 30):       '
 CALL scan_num
-mov hd,cx
+mov hd,cx ; valoarea inaltimii o pun in hd
 
 GOTOXY 0,0
 PRINTN 'Dati latimea usii(max 30):         '
-CALL scan_num
-mov ld,cx
-PRINTN '                                   ' 
-
+CALL scan_num 
+mov ld,cx ;iar valoarea latimii in ld  
+GOTOXY 0,0
+PRINTN '                                   '
+PRINT '      ' 
+    ;pozitionez punctele de plecare pentru desenarea usii
     mov cx,xd1
     mov dx,yd1
     sub dx,hd
 Loop16:
-    call draw
+    call draw ;apelez functia de desenare
     inc dx
     cmp dx,yd1
-    jbe Loop16 
-   
+    jbe Loop16  ;si continui sa deseez pana ajung la final
+    ;fac aceeasi pasi si pentru celelalte doua laturi
     mov cx,xd1
     add cx,ld
     mov dx,yd1
-    sub dx,hd 
- 
+    sub dx,hd  
 Loop17:
     call draw
     inc dx
@@ -242,23 +237,26 @@ Loop18:
     dec cx   
     cmp cx,xd1
     jae Loop18
+call sound 
+;acum vom desena cateva stelute
+GOTOXY 0,0
 PRINTN 'Alegeti punctul de pornire pentru stelute'
 draw_star:
-mov ax, 0 ; ini?ializare mouse
-int 33h
-cmp ax, 0
-;mov ax, 1 ; afi?are cursor mouse – op?ional
-;int 33h
+    mov ax, 0 ; initializare mouse
+    int 33h
+    cmp ax, 0
 check_mouse_button:
-mov ax, 3
-int 33h ; preluare pozi?ie ?i status butoane
-shr cx, 1 ; x/2 – în modul grafic este dublata coordonata x
-cmp bx, 1
-jne check_mouse_button
-mov xs,cx
-mov ys,dx
-add cx,4
-sub dx,4
+    mov ax, 3
+    int 33h ; preluare pozitie si status butoane
+    shr cx, 1 ;  in modul grafic este dublata coordonata x
+    cmp bx, 1
+    jne check_mouse_button;verific daca nu apas butonul mouseului
+    ;pastrez coordonatele punctului pe care am apasat
+    mov xs,cx
+    mov ys,dx
+    add cx,4
+    sub dx,4
+    ;si incep sa desenez stelutele
 draw_s:
     call draw
     dec cx
@@ -308,26 +306,26 @@ draw_s5:
     inc dx
     cmp dx,ys
     jne draw_s5
-    
+;verific constant daca s-a apasat esc    
 check_esc_key:
-mov dl, 255
-mov ah, 6
-int 21h
-cmp al, 27 ; esc?
-;jne check_mouse_button
-jne draw_star    
-    
-    
-
+    mov dl, 255
+    mov ah, 6
+    int 21h
+    cmp al, 27 ;apasare esc?
+    jne draw_star; daca nu se apasa continui desenarea    
     
 hlt
-draw PROC
-    ;create the first point on the line and set the color
+sound PROC ;functie generare sunet
+    mov ah, 02
+    mov dl, 07h       ;07h valoarea ce produce beepul
+    int 21h
+sound ENDP 
+draw PROC  ;functia pentru desenarea unui pixel
+    ;creaza primul punct si seteaza culoarea
     mov al,50    
-    ;crate a function to draw a pixel, then call the interupt
     mov ah,0ch
     int 10h
-    ;ret
 draw ENDP
+
 DEFINE_SCAN_NUM
 ret
